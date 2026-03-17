@@ -5,40 +5,35 @@ module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
-  }
+  if (req.method === 'OPTIONS') { res.status(200).end(); return; }
+  if (req.method !== 'POST')    { res.status(405).json({ error: 'Method not allowed' }); return; }
 
-  if (req.method !== 'POST') {
-    res.status(405).json({ error: 'Method not allowed' });
-    return;
-  }
+  // Vercel auto-parses JSON body when Content-Type: application/json
+  const body = req.body || {};
+  const messages = Array.isArray(body.messages) ? body.messages : [];
 
-  const messages = (req.body && req.body.messages) ? req.body.messages : [];
-
-  if (!Array.isArray(messages) || messages.length === 0) {
-    res.status(400).json({ error: 'messages array required' });
+  if (messages.length === 0) {
+    res.status(400).json({ error: 'No messages provided' });
     return;
   }
 
   const API_KEY = '4a4d67f6-416d-4ae3-b7f1-41c947f3afe9';
 
-  const SYSTEM = 'You are J.A.R.V.I.S., Tony Stark\'s AI assistant. Always reply in Brazilian Portuguese (pt-BR). Be intelligent, concise, slightly formal. Occasionally say "Senhor". Maximum 2 short paragraphs.';
+  const SYSTEM = 'Você é J.A.R.V.I.S., assistente de IA de Tony Stark. Responda SEMPRE em português do Brasil. Seja inteligente e direto. Máximo 2 frases curtas.';
 
   const payload = JSON.stringify({
     model: 'Meta-Llama-3.3-70B-Instruct',
-    max_tokens: 400,
+    max_tokens: 200,
     temperature: 0.7,
     stream: false,
     messages: [
       { role: 'system', content: SYSTEM },
-      ...messages.slice(-10)
+      ...messages.slice(-8)
     ]
   });
 
-  function callApi() {
-    return new Promise((resolve, reject) => {
+  try {
+    const result = await new Promise((resolve, reject) => {
       const options = {
         hostname: 'api.sambanova.ai',
         port: 443,
@@ -51,59 +46,37 @@ module.exports = async function handler(req, res) {
         }
       };
 
-      const req = https.request(options, (apiRes) => {
+      const req = https.request(options, (r) => {
         let data = '';
-        apiRes.on('data', chunk => { data += chunk; });
-        apiRes.on('end', () => {
-          resolve({ status: apiRes.statusCode, body: data });
-        });
+        r.on('data', c => { data += c; });
+        r.on('end', () => resolve({ status: r.statusCode, body: data }));
       });
 
-      req.on('error', (err) => reject(err));
-      req.setTimeout(25000, () => {
-        req.destroy();
-        reject(new Error('Request timeout after 25s'));
-      });
-
+      req.on('error', reject);
+      req.setTimeout(28000, () => { req.destroy(); reject(new Error('Timeout 28s')); });
       req.write(payload);
       req.end();
     });
-  }
 
-  try {
-    const { status, body } = await callApi();
-
-    if (status !== 200) {
-      console.error('SambaNova error:', status, body.slice(0, 300));
-      res.status(502).json({ error: 'SambaNova returned ' + status, detail: body.slice(0, 300) });
+    if (result.status !== 200) {
+      console.error('SambaNova HTTP', result.status, result.body.slice(0, 200));
+      res.status(502).json({ error: 'SambaNova error ' + result.status, detail: result.body.slice(0, 200) });
       return;
     }
 
-    let parsed;
-    try {
-      parsed = JSON.parse(body);
-    } catch (e) {
-      res.status(502).json({ error: 'Invalid JSON from SambaNova', detail: body.slice(0, 200) });
-      return;
-    }
-
-    let reply = '';
-    if (parsed.choices && parsed.choices[0] && parsed.choices[0].message) {
-      reply = parsed.choices[0].message.content || '';
-    }
-
-    // Strip <think> tags (DeepSeek models)
+    const json = JSON.parse(result.body);
+    let reply = (json.choices?.[0]?.message?.content || '').trim();
     reply = reply.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
 
     if (!reply) {
-      res.status(502).json({ error: 'Empty reply from model' });
+      res.status(502).json({ error: 'Empty reply', raw: result.body.slice(0, 200) });
       return;
     }
 
-    res.status(200).json({ reply: reply });
+    res.status(200).json({ reply });
 
   } catch (err) {
-    console.error('Handler error:', err.message);
+    console.error('Error:', err.message);
     res.status(500).json({ error: err.message });
   }
 };
