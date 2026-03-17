@@ -1,8 +1,5 @@
 {
   "version": 2,
-  "env": {
-    "SAMBANOVA_API_KEY": "4a4d67f6-416d-4ae3-b7f1-41c947f3afe9"
-  },
   "functions": {
     "api/chat.js": {
       "maxDuration": 30
