@@ -1,262 +1,461 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>J.A.R.V.I.S \u2014 Assistente de IA</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --cyan: #00f5ff;
-      --blue: #0066ff;
-      --purple: #7b2fff;
-      --gold: #ffd700;
-      --red: #ff3355;
-      --green: #00ff88;
-      --bg: #000811;
-      --panel: rgba(0, 20, 50, 0.6);
-      --border: rgba(0, 245, 255, 0.25);
-    }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>J.A.R.V.I.S</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+*{margin:0;padding:0;box-sizing:border-box;}
 
-    body {
-      background: var(--bg);
-      font-family: 'Share Tech Mono', monospace;
-      color: var(--cyan);
-      overflow: hidden;
-      height: 100vh;
-      width: 100vw;
-      position: relative;
-      cursor: crosshair;
-    }
+body{
+  background:#000a1a;
+  font-family:'Share Tech Mono',monospace;
+  color:#00e5ff;
+  min-height:100vh;
+  overflow-x:hidden;
+}
 
-    /* \u2500\u2500 CANVAS DE PART\u00cdCULAS \u2500\u2500 */
-    #bgCanvas {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-    }
+/* \u2500\u2500 CANVAS \u2500\u2500 */
+#canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;}
 
-    /* \u2500\u2500 LONDO / HOLO RINGS \u2500\u2500 */
-    .holo-rings {
-      position: fixed;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      pointer-events: none;
-      z-index: 1;
-    }
+/* \u2500\u2500 RINGS \u2500\u2500 */
+#rings{
+  position:fixed;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  z-index:1;pointer-events:none;
+}
+.ring{
+  position:absolute;border-radius:50%;
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  border:1px solid transparent;
+}
+.r1{width:600px;height:600px;border-top:1px solid rgba(0,229,255,0.4);border-right:1px solid rgba(0,229,255,0.1);animation:spin 14s linear infinite;}
+.r2{width:480px;height:480px;border-bottom:1px solid rgba(100,50,255,0.5);border-left:1px solid rgba(100,50,255,0.1);animation:spin 10s linear infinite reverse;}
+.r3{width:360px;height:360px;border-top:1px solid rgba(0,150,255,0.4);border-right:1px solid rgba(0,150,255,0.1);animation:spin 7s linear infinite;}
+.r4{width:260px;height:260px;border-bottom:1px solid rgba(0,255,150,0.4);border-left:1px solid rgba(0,255,150,0.1);animation:spin 5s linear infinite reverse;}
+.r5{width:170px;height:170px;border-top:1px solid rgba(255,200,0,0.5);border-right:1px solid rgba(255,200,0,0.1);animation:spin 3s linear infinite;}
 
-    .ring {
-      position: absolute;
-      border-radius: 50%;
-      border: 1px solid transparent;
-      animation: rotate linear infinite;
-    }
+@keyframes spin{from{transform:translate(-50%,-50%) rotate(0deg);}to{transform:translate(-50%,-50%) rotate(360deg);}}
 
-    .ring-1 {
-      width: 700px; height: 700px;
-      border-color: rgba(0, 245, 255, 0.12);
-      border-top-color: var(--cyan);
-      animation-duration: 12s;
-      box-shadow: 0 0 30px rgba(0, 245, 255, 0.08);
-    }
-    .ring-2 {
-      width: 560px; height: 560px;
-      border-color: rgba(123, 47, 255, 0.12);
-      border-right-color: var(--purple);
-      animation-duration: 9s;
-      animation-direction: reverse;
-    }
-    .ring-3 {
-      width: 420px; height: 420px;
-      border-color: rgba(0, 102, 255, 0.15);
-      border-bottom-color: var(--blue);
-      animation-duration: 7s;
-    }
-    .ring-4 {
-      width: 300px; height: 300px;
-      border-color: rgba(0, 255, 136, 0.1);
-      border-left-color: var(--green);
-      animation-duration: 5s;
-      animation-direction: reverse;
-    }
-    .ring-5 {
-      width: 180px; height: 180px;
-      border-color: rgba(255, 215, 0, 0.2);
-      border-top-color: var(--gold);
-      border-right-color: var(--gold);
-      animation-duration: 3s;
-    }
+/* \u2500\u2500 CORE \u2500\u2500 */
+#core{
+  position:fixed;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:70px;height:70px;border-radius:50%;
+  background:radial-gradient(circle,#fff 0%,#00e5ff 35%,rgba(0,100,255,0.5) 70%,transparent 100%);
+  box-shadow:0 0 20px #00e5ff,0 0 60px rgba(0,150,255,0.6),0 0 120px rgba(0,100,255,0.3);
+  z-index:3;pointer-events:none;
+  animation:pulse 2.5s ease-in-out infinite;
+  transition:all 0.4s ease;
+}
+#core.listening{
+  background:radial-gradient(circle,#fff 0%,#00ff90 35%,rgba(0,200,100,0.5) 70%,transparent 100%);
+  box-shadow:0 0 20px #00ff90,0 0 60px rgba(0,255,120,0.6),0 0 140px rgba(0,200,80,0.4);
+  animation:pulse-fast 0.5s ease-in-out infinite alternate;
+}
+#core.speaking{
+  background:radial-gradient(circle,#fff 0%,#ffd700 35%,rgba(255,140,0,0.5) 70%,transparent 100%);
+  box-shadow:0 0 20px #ffd700,0 0 60px rgba(255,160,0,0.6),0 0 140px rgba(255,100,0,0.4);
+  animation:pulse-fast 0.3s ease-in-out infinite alternate;
+}
 
-    @keyframes rotate {
-      from { transform: rotate(0deg); }
-      to   { transform: rotate(360deg); }
-    }
+@keyframes pulse{0%,100%{transform:translate(-50%,-50%) scale(1);}50%{transform:translate(-50%,-50%) scale(1.12);}}
+@keyframes pulse-fast{from{transform:translate(-50%,-50%) scale(0.9);}to{transform:translate(-50%,-50%) scale(1.3);}}
 
-    /* \u2500\u2500 ARC REACTOR CORE \u2500\u2500 */
-    .arc-core {
-      position: fixed;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 2;
-      pointer-events: none;
-    }
+/* \u2500\u2500 ORBS \u2500\u2500 */
+.orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(70px);}
+#o1{width:500px;height:500px;background:rgba(0,80,200,0.07);top:-150px;left:-150px;animation:orbmove 25s ease-in-out infinite alternate;}
+#o2{width:400px;height:400px;background:rgba(80,0,200,0.07);bottom:-100px;right:-100px;animation:orbmove 20s ease-in-out infinite alternate-reverse;}
+#o3{width:300px;height:300px;background:rgba(0,200,150,0.05);top:40%;left:60%;animation:orbmove 18s ease-in-out infinite alternate;}
+@keyframes orbmove{from{transform:translate(0,0);}to{transform:translate(60px,-60px);}}
 
-    .core-pulse {
-      width: 80px; height: 80px;
-      border-radius: 50%;
-      background: radial-gradient(circle, #fff 0%, var(--cyan) 30%, rgba(0,102,255,0.6) 60%, transparent 80%);
-      box-shadow:
-        0 0 20px var(--cyan),
-        0 0 60px var(--blue),
-        0 0 120px rgba(0,245,255,0.3);
-      animation: corePulse 2s ease-in-out infinite;
-    }
+/* \u2500\u2500 SCAN LINES \u2500\u2500 */
+#scan{position:fixed;inset:0;z-index:2;pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,229,255,0.012) 3px,rgba(0,229,255,0.012) 4px);}
 
-    .core-pulse.listening {
-      background: radial-gradient(circle, #fff 0%, var(--green) 30%, rgba(0,255,136,0.6) 60%, transparent 80%);
-      box-shadow: 0 0 20px var(--green), 0 0 60px var(--green), 0 0 140px rgba(0,255,136,0.4);
-      animation: coreListening 0.5s ease-in-out infinite alternate;
-    }
+/* \u2500\u2500 MAIN LAYOUT \u2500\u2500 */
+#app{
+  position:relative;z-index:10;
+  max-width:900px;margin:0 auto;
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  padding:20px;gap:16px;
+}
 
-    .core-pulse.speaking {
-      background: radial-gradient(circle, #fff 0%, var(--gold) 30%, rgba(255,165,0,0.6) 60%, transparent 80%);
-      box-shadow: 0 0 20px var(--gold), 0 0 60px orange, 0 0 140px rgba(255,215,0,0.4);
-      animation: coreSpeaking 0.3s ease-in-out infinite alternate;
-    }
+/* \u2500\u2500 HEADER \u2500\u2500 */
+#header{
+  text-align:center;padding:20px 0 10px;
+  border-bottom:1px solid rgba(0,229,255,0.15);
+}
+#title{
+  font-family:'Orbitron',sans-serif;
+  font-size:2.2rem;font-weight:900;
+  color:#00e5ff;
+  text-shadow:0 0 20px #00e5ff,0 0 50px rgba(0,150,255,0.5);
+  letter-spacing:0.4em;
+}
+#subtitle{
+  font-size:0.65rem;color:rgba(0,229,255,0.45);
+  letter-spacing:0.25em;margin-top:6px;
+}
+#status-row{
+  display:flex;justify-content:center;gap:24px;
+  margin-top:14px;font-size:0.6rem;color:rgba(0,229,255,0.5);
+  letter-spacing:0.15em;
+}
+.dot{
+  display:inline-block;width:7px;height:7px;border-radius:50%;
+  margin-right:6px;vertical-align:middle;
+  animation:blink 2s ease-in-out infinite;
+}
+.dot-green{background:#00ff90;box-shadow:0 0 6px #00ff90;}
+.dot-blue{background:#00a0ff;box-shadow:0 0 6px #00a0ff;}
+.dot-red{background:#ff3366;box-shadow:0 0 6px #ff3366;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
 
-    @keyframes corePulse {
-      0%,100% { transform: scale(1); opacity: 0.9; }
-      50%      { transform: scale(1.12); opacity: 1; }
-    }
-    @keyframes coreListening {
-      from { transform: scale(1); }
-      to   { transform: scale(1.3); }
-    }
-    @keyframes coreSpeaking {
-      from { transform: scale(0.95); }
-      to   { transform: scale(1.25); }
-    }
+/* \u2500\u2500 CHAT BOX \u2500\u2500 */
+#chatbox{
+  flex:1;
+  background:rgba(0,15,40,0.55);
+  border:1px solid rgba(0,229,255,0.18);
+  border-radius:4px;
+  backdrop-filter:blur(10px);
+  overflow-y:auto;
+  padding:16px;
+  display:flex;flex-direction:column;gap:12px;
+  min-height:380px;max-height:420px;
+  scrollbar-width:thin;scrollbar-color:rgba(0,229,255,0.2) transparent;
+}
+#chatbox::-webkit-scrollbar{width:3px;}
+#chatbox::-webkit-scrollbar-thumb{background:rgba(0,229,255,0.2);}
 
-    /* \u2500\u2500 HEXAGONAL GRID OVERLAY \u2500\u2500 */
-    .hex-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 1;
-      pointer-events: none;
-      background-image:
-        repeating-linear-gradient(60deg,  rgba(0,245,255,0.03) 0px, rgba(0,245,255,0.03) 1px, transparent 1px, transparent 30px),
-        repeating-linear-gradient(120deg, rgba(0,245,255,0.03) 0px, rgba(0,245,255,0.03) 1px, transparent 1px, transparent 30px),
-        repeating-linear-gradient(180deg, rgba(0,245,255,0.03) 0px, rgba(0,245,255,0.03) 1px, transparent 1px, transparent 30px);
-      animation: hexShift 20s linear infinite;
+.msg{padding:10px 14px;border-radius:3px;font-size:0.82rem;line-height:1.65;animation:fadein 0.3s ease;}
+@keyframes fadein{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+.msg-label{font-size:0.55rem;letter-spacing:0.2em;margin-bottom:5px;opacity:0.5;text-transform:uppercase;}
+
+.user{
+  align-self:flex-end;max-width:75%;
+  background:rgba(0,80,200,0.18);
+  border:1px solid rgba(0,100,255,0.35);
+  color:#a0c8ff;
+}
+.jarvis{
+  align-self:flex-start;max-width:85%;
+  background:rgba(0,229,255,0.06);
+  border:1px solid rgba(0,229,255,0.2);
+  border-left:3px solid #00e5ff;
+  color:#00e5ff;
+}
+
+/* typing dots */
+#typing{align-self:flex-start;padding:12px 16px;}
+.tdot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#00e5ff;margin:0 2px;animation:td 1s ease-in-out infinite;}
+.tdot:nth-child(2){animation-delay:0.2s;}
+.tdot:nth-child(3){animation-delay:0.4s;}
+@keyframes td{0%,100%{opacity:0.2;transform:translateY(0);}50%{opacity:1;transform:translateY(-5px);}}
+
+/* \u2500\u2500 VISUALIZER \u2500\u2500 */
+#viz{
+  display:flex;align-items:flex-end;justify-content:center;
+  gap:3px;height:48px;padding:0 20px;
+}
+.vbar{
+  width:6px;border-radius:2px 2px 0 0;
+  background:linear-gradient(to top,#0050ff,#00e5ff);
+  box-shadow:0 0 4px rgba(0,229,255,0.5);
+  min-height:4px;
+  transition:height 0.1s ease;
+  animation:vibidle 1.8s ease-in-out infinite;
+}
+.vbar:nth-child(2n){animation-delay:0.15s;background:linear-gradient(to top,#6600ff,#00a0ff);}
+.vbar:nth-child(3n){animation-delay:0.3s;background:linear-gradient(to top,#0088ff,#00ffcc);}
+.vbar:nth-child(5n){animation-delay:0.45s;background:linear-gradient(to top,#0040ff,#ffd700);}
+@keyframes vibidle{0%,100%{height:4px;}50%{height:18px;}}
+.vbar.active{animation:vibactive 0.12s ease-in-out infinite alternate;}
+@keyframes vibactive{from{height:6px;}to{height:44px;}}
+
+/* \u2500\u2500 CORNER MARKS \u2500\u2500 */
+.corner{position:fixed;width:50px;height:50px;z-index:5;pointer-events:none;}
+.corner::before,.corner::after{content:'';position:absolute;background:#00e5ff;box-shadow:0 0 6px #00e5ff;}
+.corner::before{width:20px;height:1px;top:0;left:0;}
+.corner::after{width:1px;height:20px;top:0;left:0;}
+#c1{top:16px;left:16px;}
+#c2{top:16px;right:16px;transform:scaleX(-1);}
+#c3{bottom:16px;left:16px;transform:scaleY(-1);}
+#c4{bottom:16px;right:16px;transform:scale(-1);}
+
+/* \u2500\u2500 INPUT AREA \u2500\u2500 */
+#input-area{
+  background:rgba(0,15,40,0.6);
+  border:1px solid rgba(0,229,255,0.18);
+  border-radius:4px;
+  padding:16px;
+  backdrop-filter:blur(10px);
+}
+#input-row{display:flex;gap:10px;align-items:center;}
+#textInput{
+  flex:1;
+  background:rgba(0,10,30,0.8);
+  border:1px solid rgba(0,229,255,0.2);
+  border-radius:3px;
+  padding:12px 16px;
+  color:#00e5ff;
+  font-family:'Share Tech Mono',monospace;
+  font-size:0.85rem;
+  outline:none;
+  transition:border-color 0.3s,box-shadow 0.3s;
+}
+#textInput:focus{
+  border-color:#00e5ff;
+  box-shadow:0 0 16px rgba(0,229,255,0.18);
+}
+#textInput::placeholder{color:rgba(0,229,255,0.28);}
+
+.btn{
+  background:transparent;
+  border:1px solid rgba(0,229,255,0.3);
+  border-radius:3px;
+  color:#00e5ff;
+  font-family:'Share Tech Mono',monospace;
+  font-size:0.72rem;
+  letter-spacing:0.12em;
+  padding:12px 18px;
+  cursor:pointer;
+  text-transform:uppercase;
+  transition:all 0.2s;
+  white-space:nowrap;
+}
+.btn:hover{background:rgba(0,229,255,0.1);border-color:#00e5ff;box-shadow:0 0 12px rgba(0,229,255,0.2);}
+.btn:active{transform:scale(0.97);}
+
+#micBtn{
+  width:46px;height:46px;border-radius:50%;
+  padding:0;font-size:1.1rem;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+#micBtn.recording{
+  border-color:#ff3366;
+  background:rgba(255,51,102,0.15);
+  box-shadow:0 0 20px rgba(255,51,102,0.5);
+  animation:micpulse 0.8s ease-in-out infinite;
+}
+@keyframes micpulse{0%,100%{box-shadow:0 0 20px rgba(255,51,102,0.5);}50%{box-shadow:0 0 40px rgba(255,51,102,0.9);}}
+
+#info-row{
+  display:flex;justify-content:space-between;
+  margin-top:10px;font-size:0.58rem;color:rgba(0,229,255,0.28);
+  letter-spacing:0.1em;
+}
+#statusText{color:rgba(0,229,255,0.5);}
+
+/* \u2500\u2500 TICKER \u2500\u2500 */
+#ticker{
+  position:fixed;bottom:0;left:0;right:0;height:22px;
+  background:rgba(0,8,25,0.85);
+  border-top:1px solid rgba(0,229,255,0.1);
+  overflow:hidden;z-index:20;
+  display:flex;align-items:center;
+}
+#ticker-text{
+  white-space:nowrap;
+  font-size:0.57rem;color:rgba(0,229,255,0.35);
+  letter-spacing:0.12em;
+  animation:ticker 50s linear infinite;
+}
+@keyframes ticker{from{transform:translateX(100vw);}to{transform:translateX(-100%);}}
+
+/* \u2500\u2500 LOADER \u2500\u2500 */
+#loader{
+  position:fixed;inset:0;background:#000a1a;
+  z-index:999;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;
+  transition:opacity 0.8s ease;
+}
+#loader.done{opacity:0;pointer-events:none;}
+.lring{
+  width:100px;height:100px;border-radius:50%;
+  border:2px solid transparent;
+  border-top-color:#00e5ff;border-right-color:rgba(0,100,255,0.5);
+  animation:lspin 1s linear infinite;
+  box-shadow:0 0 25px rgba(0,229,255,0.3);
+}
+@keyframes lspin{to{transform:rotate(360deg);}}
+.ltxt{font-family:'Orbitron',sans-serif;font-size:0.68rem;letter-spacing:0.3em;color:#00e5ff;animation:lpulse 1s ease-in-out infinite;}
+@keyframes lpulse{0%,100%{opacity:0.3;}50%{opacity:1;}}
+#lprogwrap{width:180px;height:2px;background:rgba(0,229,255,0.1);border-radius:1px;overflow:hidden;}
+#lprog{height:100%;background:linear-gradient(to right,#0060ff,#00e5ff);box-shadow:0 0 6px #00e5ff;width:0%;transition:width 0.08s linear;}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="lring"></div>
+  <div class="ltxt">INICIALIZANDO J.A.R.V.I.S</div>
+  <div id="lprogwrap"><div id="lprog"></div></div>
+</div>
+
+<!-- BG ELEMENTS -->
+<canvas id="canvas"></canvas>
+<div id="scan"></div>
+<div class="orb" id="o1"></div>
+<div class="orb" id="o2"></div>
+<div class="orb" id="o3"></div>
+<div id="rings">
+  <div class="ring r1"></div>
+  <div class="ring r2"></div>
+  <div class="ring r3"></div>
+  <div class="ring r4"></div>
+  <div class="ring r5"></div>
+</div>
+<div id="core"></div>
+<div class="corner" id="c1"></div>
+<div class="corner" id="c2"></div>
+<div class="corner" id="c3"></div>
+<div class="corner" id="c4"></div>
+
+<!-- MAIN -->
+<div id="app">
+
+  <!-- HEADER -->
+  <div id="header">
+    <div id="title">J.A.R.V.I.S</div>
+    <div id="subtitle">JUST A RATHER VERY INTELLIGENT SYSTEM</div>
+    <div id="status-row">
+      <span><span class="dot dot-green"></span>SISTEMA ONLINE</span>
+      <span><span class="dot dot-blue"></span>SAMBANOVA API</span>
+      <span><span class="dot dot-green"></span>DEEPSEEK-R1 ATIVO</span>
+    </div>
+  </div>
+
+  <!-- VISUALIZER -->
+  <div id="viz">
+    <div class="vbar"></div><div class="vbar"></div><div class="vbar"></div>
+    <div class="vbar"></div><div class="vbar"></div><div class="vbar"></div>
+    <div class="vbar"></div><div class="vbar"></div><div class="vbar"></div>
+    <div class="vbar"></div><div class="vbar"></div><div class="vbar"></div>
+    <div class="vbar"></div><div class="vbar"></div><div class="vbar"></div>
+    <div class="vbar"></div><div class="vbar"></div><div class="vbar"></div>
+    <div class="vbar"></div><div class="vbar"></div>
+  </div>
+
+  <!-- CHAT -->
+  <div id="chatbox">
+    <div class="msg jarvis">
+      <div class="msg-label">\u25b8 J.A.R.V.I.S \u2014 ONLINE</div>
+      Ol\u00e1. Todos os sistemas est\u00e3o operacionais. Sou J.A.R.V.I.S \u2014 Just A Rather Very Intelligent System. Como posso auxili\u00e1-lo hoje?
+    </div>
+  </div>
+
+  <!-- INPUT -->
+  <div id="input-area">
+    <div id="input-row">
+      <button class="btn" id="micBtn" title="Clique para falar">\ud83c\udfa4</button>
+      <input type="text" id="textInput" placeholder="Digite ou fale um comando para J.A.R.V.I.S..." autocomplete="off" />
+      <button class="btn" id="sendBtn">\u25b6 ENVIAR</button>
+      <button class="btn" id="clearBtn" style="color:rgba(0,229,255,0.4);border-color:rgba(0,229,255,0.15);">LIMPAR</button>
+    </div>
+    <div id="info-row">
+      <span>\u25c8 MODO CONVERSA ATIVA</span>
+      <span id="statusText">AGUARDANDO COMANDO</span>
+      <span>POWERED BY SAMBANOVA \u25c8</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- TICKER -->
+<div id="ticker">
+  <div id="ticker-text">
+    \u25c8 TODOS OS SISTEMAS OPERACIONAIS &nbsp;&nbsp;&nbsp; \u25c8 MODELO DEEPSEEK-R1 70B ATIVO &nbsp;&nbsp;&nbsp;
+    \u25c8 ESCUDO DE ENERGIA: 100% &nbsp;&nbsp;&nbsp; \u25c8 AN\u00c1LISE DE AMEA\u00c7AS: NEGATIVA &nbsp;&nbsp;&nbsp;
+    \u25c8 TEMPERATURA DO REATOR: NOMINAL &nbsp;&nbsp;&nbsp; \u25c8 CONEX\u00c3O SEGURA ESTABELECIDA &nbsp;&nbsp;&nbsp;
+    \u25c8 BANCO DE DADOS ATUALIZADO &nbsp;&nbsp;&nbsp; \u25c8 PROCESSAMENTO NEURAL: \u00d3TIMO &nbsp;&nbsp;&nbsp;
+  </div>
+</div>
+
+<script>
+// \u2500\u2500 LOADER \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+(function(){
+  const bar = document.getElementById('lprog');
+  const loader = document.getElementById('loader');
+  let p = 0;
+  const iv = setInterval(function(){
+    p += Math.random()*18 + 4;
+    if(p >= 100){
+      p = 100;
+      clearInterval(iv);
+      setTimeout(function(){ loader.classList.add('done'); }, 500);
     }
+    bar.style.width = p + '%';
+  }, 100);
+})();
 
-    @keyframes hexShift {
-      from { background-position: 0 0; }
-      to   { background-position: 60px 104px; }
+// \u2500\u2500 PARTICLES \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+(function(){
+  const c = document.getElementById('canvas');
+  const ctx = c.getContext('2d');
+  function resize(){ c.width = window.innerWidth; c.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const pts = [];
+  for(let i=0;i<80;i++){
+    pts.push({
+      x: Math.random()*window.innerWidth,
+      y: Math.random()*window.innerHeight,
+      vx:(Math.random()-0.5)*0.35,
+      vy:(Math.random()-0.5)*0.35,
+      r: Math.random()*1.2+0.4,
+      col: ['rgba(0,229,255,','rgba(0,100,255,','rgba(100,50,255,','rgba(0,200,150,'][Math.floor(Math.random()*4)]
+    });
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    for(let i=0;i<pts.length;i++){
+      const p=pts[i];
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.x<0)p.x=c.width; if(p.x>c.width)p.x=0;
+      if(p.y<0)p.y=c.height; if(p.y>c.height)p.y=0;
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=p.col+'0.7)'; ctx.fill();
+      for(let j=i+1;j<pts.length;j++){
+        const q=pts[j];
+        const dx=p.x-q.x, dy=p.y-q.y;
+        const d=Math.sqrt(dx*dx+dy*dy);
+        if(d<110){
+          ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(q.x,q.y);
+          ctx.strokeStyle=p.col+(0.12*(1-d/110))+')';
+          ctx.lineWidth=0.5; ctx.stroke();
+        }
+      }
     }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
 
-    /* \u2500\u2500 SCAN LINES \u2500\u2500 */
-    .scanlines {
-      position: fixed;
-      inset: 0;
-      z-index: 2;
-      pointer-events: none;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(0, 245, 255, 0.015) 2px,
-        rgba(0, 245, 255, 0.015) 4px
-      );
-    }
+// \u2500\u2500 JARVIS LOGIC \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+const API_KEY = '4a4d67f6-416d-4ae3-b7f1-41c947f3afe9';
+const API_URL = 'https://api.sambanova.ai/v1/chat/completions';
 
-    /* \u2500\u2500 CORNER DECORATIONS \u2500\u2500 */
-    .corner {
-      position: fixed;
-      width: 80px; height: 80px;
-      z-index: 5;
-      pointer-events: none;
-    }
-    .corner::before, .corner::after {
-      content: '';
-      position: absolute;
-      background: var(--cyan);
-      box-shadow: 0 0 8px var(--cyan);
-    }
-    .corner::before { width: 30px; height: 2px; }
-    .corner::after  { width: 2px; height: 30px; }
+const SYSTEM = `Voc\u00ea \u00e9 J.A.R.V.I.S (Just A Rather Very Intelligent System), o assistente de IA de Tony Stark.
+- Fale sempre em portugu\u00eas do Brasil
+- Seja inteligente, eficiente, levemente formal e sofisticado
+- Use termos como "Senhor", "an\u00e1lise conclu\u00edda", "conforme solicitado"
+- Pode fazer refer\u00eancias ao universo Homem de Ferro quando relevante
+- Respostas \u00fateis e diretas, sem ser excessivamente longo`;
 
-    .corner-tl { top: 20px; left: 20px; }
-    .corner-tr { top: 20px; right: 20px; transform: scaleX(-1); }
-    .corner-bl { bottom: 20px; left: 20px; transform: scaleY(-1); }
-    .corner-br { bottom: 20px; right: 20px; transform: scale(-1); }
+let history = [];
+let queries = 0;
 
-    /* \u2500\u2500 MAIN UI LAYOUT \u2500\u2500 */
-    .ui-layout {
-      position: fixed;
-      inset: 0;
-      z-index: 10;
-      display: grid;
-      grid-template-columns: 260px 1fr 260px;
-      grid-template-rows: 60px 1fr 160px;
-      padding: 20px;
-      gap: 12px;
-    }
+const chatbox  = document.getElementById('chatbox');
+const input    = document.getElementById('textInput');
+const statusEl = document.getElementById('statusText');
+const coreEl   = document.getElementById('core');
+const bars     = document.querySelectorAll('.vbar');
 
-    /* \u2500\u2500 TOP BAR \u2500\u2500 */
-    .top-bar {
-      grid-column: 1 / -1;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 16px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .system-name {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 1.4rem;
-      font-weight: 900;
-      color: var(--cyan);
-      text-shadow: 0 0 20px var(--cyan), 0 0 40px rgba(0,245,255,0.5);
-      letter-spacing: 0.3em;
-    }
-
-    .system-name span { color: var(--blue); }
-
-    .status-bar {
-      display: flex;
-      gap: 20px;
-      font-size: 0.65rem;
-      color: rgba(0,245,255,0.6);
-    }
-
-    .status-item { display: flex; align-items: center; gap: 6px; }
-    .status-dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: var(--green);
-      box-shadow: 0 0 6px var(--green);
-      animation: blink 2s ease-in-out infinite;
-    }
-    .status-dot.red { background: var(--red); box-shadow: 0 0 6px var(--red); }
-
-    @keyframes blink {
-      0%,100% { opacity: 1; }
-      50%      { opacity: 0.3; }
-    }
-
-    /* \u2500\u2500 SIDE PANELS \u2500\u2500 */
-    .panel-left, .panel-right {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .data-card {
-      background: var(--panel);
-      border: 1px solid var(--border
+function setStatus(txt
