@@ -102,7 +102,7 @@ function uTTS(){
 /* SPEAK */
 function speak(text){
   if(!window.speechSynthesis){L('Sem TTS. Use Chrome ou Safari.','er');S('idle');return;}
-  window.speechSynthesis.cancel();
+  if(window.speechSynthesis.speaking) window.speechSynthesis.cancel();
   var clean=text.replace(/<[^>]*>/g,'').replace(/\s+/g,' ').trim();
   L('Falando: "'+clean.slice(0,50)+'..."','ok');
 
@@ -131,7 +131,7 @@ function speak(text){
 function ask(heard){
   heard=(heard||'').trim();
   if(!heard||state==='T')return;
-  window.speechSynthesis&&window.speechSynthesis.cancel();
+  if(window.speechSynthesis&&window.speechSynthesis.speaking) window.speechSynthesis.cancel();
   hist.push({role:'user',content:heard});
   if(hist.length>20)hist=hist.slice(-20);
   S('T');L('Enviando para API: "'+heard.slice(0,40)+'"');
@@ -190,7 +190,7 @@ function tap(e){
   if(state==='T'){L('Aguarde...');return;}
   if(state==='L'){try{recog&&recog.stop();}catch(e){}S('idle');return;}
   if(!recog){L('Use Google Chrome','er');return;}
-  window.speechSynthesis&&window.speechSynthesis.cancel();
+  if(window.speechSynthesis&&window.speechSynthesis.speaking) window.speechSynthesis.cancel();
   try{recog.abort();}catch(e){}
   setTimeout(function(){
     try{recog.start();S('L');L('Fale agora...');}
@@ -201,10 +201,7 @@ orb.addEventListener('click',tap);
 orb.addEventListener('touchend',tap,{passive:false});
 
 /* VOICES */
-if(window.speechSynthesis){
-  window.speechSynthesis.getVoices();
-  window.speechSynthesis.onvoiceschanged=function(){window.speechSynthesis.getVoices();};
-}
+if(window.speechSynthesis){ window.speechSynthesis.getVoices(); }
 
 /* TESTE AUTOMÁTICO DA API */
 window.addEventListener('load',function(){
