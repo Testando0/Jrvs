@@ -2,9 +2,27 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
+<meta name="theme-color" content="#000000"/>
+<meta name="description" content="Assistente de voz pessoal de Redzin"/>
+
+<!-- PWA -->
+<link rel="manifest" href="/manifest.json"/>
+
+<!-- iOS -->
 <meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="theme-color" content="#000"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="J.A.R.V.I.S"/>
+<link rel="apple-touch-icon" href="/icon-192.png"/>
+<link rel="apple-touch-startup-image" href="/icon-512.png"/>
+
+<!-- Android -->
+<meta name="mobile-web-app-capable" content="yes"/>
+
+<!-- Favicon -->
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png"/>
+<link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png"/>
+
 <title>J.A.R.V.I.S</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
@@ -36,9 +54,7 @@ canvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
 #st{font-size:clamp(.54rem,1.7vw,.68rem);letter-spacing:.28em;color:rgba(255,255,255,.28);text-align:center;transition:color .3s;}
 #st.on{color:rgba(255,255,255,.75);}
 
-#log{position:fixed;bottom:0;left:0;right:0;padding:8px 14px;font-size:clamp(.46rem,1.2vw,.57rem);letter-spacing:.05em;color:rgba(255,255,255,.3);background:rgba(0,0,0,.8);border-top:1px solid rgba(255,255,255,.07);z-index:99;text-align:center;word-break:break-all;}
-#log.ok{color:rgba(0,255,120,.65);}
-#log.er{color:rgba(255,90,90,.9);}
+
 </style>
 </head>
 <body>
@@ -51,7 +67,7 @@ canvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
   </div>
   <div id="st">TOQUE PARA FALAR</div>
 </div>
-<div id="log">Carregando...</div>
+
 
 <script>
 /* STARS */
@@ -65,10 +81,9 @@ canvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
 /* STATE */
 var orb=document.getElementById('orb');
 var stEl=document.getElementById('st');
-var logEl=document.getElementById('log');
 var state='idle', hist=[], ttsOn=false;
 
-function L(m,t){console.log('[J]',m);logEl.textContent=m;logEl.className=t||'';}
+function L(m,t){console.log('[J]',m);}
 
 function S(s){
   state=s;orb.className='';stEl.className='';
@@ -81,8 +96,7 @@ function S(s){
 /* UNLOCK TTS — obrigatório dentro de gesto do usuário */
 function uTTS(){
   if(ttsOn||!window.speechSynthesis)return;
-  var u=new SpeechSynthesisUtterance('');u.volume=0;u.rate=10;
-  window.speechSynthesis.speak(u);ttsOn=true;L('TTS desbloqueado');
+  ttsOn=true;
 }
 
 /* SPEAK */
@@ -95,8 +109,9 @@ function speak(text){
   function go(){
     var vv=window.speechSynthesis.getVoices();
     var u=new SpeechSynthesisUtterance(clean);
-    u.lang='pt-BR';u.rate=0.88;u.pitch=0.6;u.volume=1;
-    var v=vv.find(function(v){return v.lang==='pt-BR'&&v.localService;})||
+    u.lang='pt-BR';u.rate=0.82;u.pitch=1.35;u.volume=1;
+    var v=vv.find(function(v){return v.lang==='pt-BR'&&/female|feminino|luciana|vitoria|edith/i.test(v.name);})||
+          vv.find(function(v){return v.lang==='pt-BR'&&v.localService;})||
           vv.find(function(v){return v.lang==='pt-BR';})||
           vv.find(function(v){return v.lang.startsWith('pt');});
     if(v)u.voice=v;
@@ -207,6 +222,15 @@ window.addEventListener('load',function(){
     .catch(function(e){L('Teste API falhou: '+e.message,'er');});
   },1000);
 });
+</script>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('/sw.js')
+      .then(function(r){ console.log('[SW] registrado:', r.scope); })
+      .catch(function(e){ console.warn('[SW] erro:', e); });
+  });
+}
 </script>
 </body>
 </html>
