@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>J.A.R.V.I.S \u2014 Assistente de IA</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --cyan: #00f5ff;
+      --blue: #0066ff;
+      --purple: #7b2fff;
+      --gold: #ffd700;
+      --red: #ff3355;
+      --green: #00ff88;
+      --bg: #000811;
+      --panel: rgba(0, 20, 50, 0.6);
+      --border: rgba(0, 245, 255, 0.25);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      font-family: 'Share Tech Mono', monospace;
+      color: var(--cyan);
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      position: relative;
+      cursor: crosshair;
+    }
+
+    /* \u2500\u2500 CANVAS DE PART\u00cdCULAS \u2500\u2500 */
+    #bgCanvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* \u2500\u2500 LONDO / HOLO RINGS \u2500\u2500 */
+    .holo-rings {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid transparent;
+      animation: rotate linear infinite;
+    }
+
+    .ring-1 {
+      width: 700px; height: 700px;
+      border-color: rgba(0, 245, 255, 0.12);
+      border-top-color: var(--cyan);
+      animation-duration: 12s;
+      box-shadow: 0 0 30px rgba(0, 245, 255, 0.08);
+    }
+    .ring-2 {
+      width: 560px; height: 560px;
+      border-color: rgba(123, 47, 255, 0.12);
+      border-right-color: var(--purple);
+      animation-duration: 9s;
+      animation-direction: reverse;
+    }
+    .ring-3 {
+      width: 420px; height: 420px;
+      border-color: rgba(0, 102, 255, 0.15);
+      border-bottom-color: var(--blue);
+      animation-duration: 7s;
+    }
+    .ring-4 {
+      width: 300px; height: 300px;
+      border-color: rgba(0, 255, 136, 0.1);
+      border-left-color: var(--green);
+      animation-duration: 5s;
+      animation-direction: reverse;
+    }
+    .ring-5 {
+      width: 180px; height: 180px;
+      border-color: rgba(255, 215, 0, 0.2);
+      border-top-color: var(--gold);
+      border-right-color: var(--gold);
+      animation-duration: 3s;
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    /* \u2500\u2500 ARC REACTOR CORE \u2500\u2500 */
+    .arc-core {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .core-pulse {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fff 0%, var(--cyan) 30%, rgba(0,102,255,0.6) 60%, transparent 80%);
+      box-shadow:
+        0 0 20px var(--cyan),
+        0 0 60px var(--blue),
+        0 0 120px rgba(0,245,255,0.3);
+      animation: corePulse 2s ease-in-out infinite;
+    }
+
+    .core-pulse.listening {
+      background: radial-gradient(circle, #fff 0%, var(--green) 30%, rgba(0,255,136,0.6) 60%, transparent 80%);
+      box-shadow: 0 0 20px var(--green), 0 0 60px var(--green), 0 0 140px rgba(0,255,136,0.4);
+      animation: coreListening 0.5s ease-in-out infinite alternate;
+    }
+
+    .core-pulse.speaking {
+      background: radial-gradient(circle, #fff 0%, var(--gold) 30%, rgba(255,165,0,0.6) 60%, transparent 80%);
+      box-shadow: 0 0 20px var(--gold), 0 0 60px orange, 0 0 140px rgba(255,215,0,0.4);
+      animation: coreSpeaking 0.3s ease-in-out infinite alternate;
+    }
+
+    @keyframes corePulse {
+      0%,100% { transform: scale(1); opacity: 0.9; }
+      50%      { transform: scale(1.12); opacity: 1; }
+    }
+    @keyframes coreListening {
+      from { transform: scale(1); }
+      to   { transform: scale(1.3); }
+    }
+    @keyframes coreSpeaking {
+      from { transform: scale(0.95); }
+      to   { transform: scale(1.25); }
+    }
+
+    /* \u2500\u2500 HEXAGONAL GRID OVERLAY \u2500\u2500 */
+    .hex-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background-image:
+        repeating-linear-gradient(60deg,  rgba(0,245,255,0.03) 0px, rgba(0,245,255,0.03) 1px, transparent 1px, transparent 30px),
+        repeating-linear-gradient(120deg, rgba(0,245,255,0.03) 0px, rgba(0,245,255,0.03) 1px, transparent 1px, transparent 30px),
+        repeating-linear-gradient(180deg, rgba(0,245,255,0.03) 0px, rgba(0,245,255,0.03) 1px, transparent 1px, transparent 30px);
+      animation: hexShift 20s linear infinite;
+    }
+
+    @keyframes hexShift {
+      from { background-position: 0 0; }
+      to   { background-position: 60px 104px; }
+    }
+
+    /* \u2500\u2500 SCAN LINES \u2500\u2500 */
+    .scanlines {
+      position: fixed;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 245, 255, 0.015) 2px,
+        rgba(0, 245, 255, 0.015) 4px
+      );
+    }
+
+    /* \u2500\u2500 CORNER DECORATIONS \u2500\u2500 */
+    .corner {
+      position: fixed;
+      width: 80px; height: 80px;
+      z-index: 5;
+      pointer-events: none;
+    }
+    .corner::before, .corner::after {
+      content: '';
+      position: absolute;
+      background: var(--cyan);
+      box-shadow: 0 0 8px var(--cyan);
+    }
+    .corner::before { width: 30px; height: 2px; }
+    .corner::after  { width: 2px; height: 30px; }
+
+    .corner-tl { top: 20px; left: 20px; }
+    .corner-tr { top: 20px; right: 20px; transform: scaleX(-1); }
+    .corner-bl { bottom: 20px; left: 20px; transform: scaleY(-1); }
+    .corner-br { bottom: 20px; right: 20px; transform: scale(-1); }
+
+    /* \u2500\u2500 MAIN UI LAYOUT \u2500\u2500 */
+    .ui-layout {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      display: grid;
+      grid-template-columns: 260px 1fr 260px;
+      grid-template-rows: 60px 1fr 160px;
+      padding: 20px;
+      gap: 12px;
+    }
+
+    /* \u2500\u2500 TOP BAR \u2500\u2500 */
+    .top-bar {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .system-name {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: var(--cyan);
+      text-shadow: 0 0 20px var(--cyan), 0 0 40px rgba(0,245,255,0.5);
+      letter-spacing: 0.3em;
+    }
+
+    .system-name span { color: var(--blue); }
+
+    .status-bar {
+      display: flex;
+      gap: 20px;
+      font-size: 0.65rem;
+      color: rgba(0,245,255,0.6);
+    }
+
+    .status-item { display: flex; align-items: center; gap: 6px; }
+    .status-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 6px var(--green);
+      animation: blink 2s ease-in-out infinite;
+    }
+    .status-dot.red { background: var(--red); box-shadow: 0 0 6px var(--red); }
+
+    @keyframes blink {
+      0%,100% { opacity: 1; }
+      50%      { opacity: 0.3; }
+    }
+
+    /* \u2500\u2500 SIDE PANELS \u2500\u2500 */
+    .panel-left, .panel-right {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .data-card {
+      background: var(--panel);
+      border: 1px solid var(--border
