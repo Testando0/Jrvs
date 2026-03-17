@@ -9,85 +9,107 @@
 <title>J.A.R.V.I.S</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Courier New',monospace;color:#fff;user-select:none;touch-action:manipulation;}
+html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Courier New',monospace;user-select:none;touch-action:manipulation;}
 
-/* STARS */
 #stars{position:fixed;inset:0;z-index:0;pointer-events:none;}
 
-/* FULL PAGE CENTER */
-#ui{position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(20px,4vh,40px);}
+#ui{
+  position:fixed;inset:0;z-index:10;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:clamp(16px,3.5vh,34px);
+}
 
-/* TITLE */
-#title{font-size:clamp(.6rem,2vw,.78rem);letter-spacing:.5em;color:rgba(255,255,255,.18);text-align:center;}
+#title{
+  font-size:clamp(.55rem,1.8vw,.72rem);
+  letter-spacing:.5em;
+  color:rgba(255,255,255,.16);
+  text-align:center;
+}
 
-/* ORB WRAP */
+/* ── ORB ── */
 #orb-wrap{
   position:relative;
-  width:clamp(150px,40vw,230px);
-  height:clamp(150px,40vw,230px);
-  cursor:pointer;flex-shrink:0;
+  width:clamp(140px,40vw,220px);
+  height:clamp(140px,40vw,220px);
+  cursor:pointer;
   display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
 }
-.ring{position:absolute;border-radius:50%;top:50%;left:50%;border:1px solid transparent;pointer-events:none;}
-.ring:nth-child(1){width:112%;height:112%;transform:translate(-50%,-50%);border-top-color:rgba(100,140,255,.22);animation:rs 9s linear infinite;}
-.ring:nth-child(2){width:127%;height:127%;transform:translate(-50%,-50%);border-bottom-color:rgba(140,80,255,.16);animation:rs 15s linear infinite reverse;}
-.ring:nth-child(3){width:144%;height:144%;transform:translate(-50%,-50%);border-right-color:rgba(80,180,255,.1);animation:rs 23s linear infinite;}
+.ring{
+  position:absolute;border-radius:50%;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  border:1px solid transparent;
+  pointer-events:none;
+}
+.ring:nth-child(1){width:112%;height:112%;border-top-color:rgba(100,140,255,.22);animation:rs 9s linear infinite;}
+.ring:nth-child(2){width:128%;height:128%;border-bottom-color:rgba(140,80,255,.15);animation:rs 15s linear infinite reverse;}
+.ring:nth-child(3){width:145%;height:145%;border-right-color:rgba(80,180,255,.1);animation:rs 23s linear infinite;}
 @keyframes rs{to{transform:translate(-50%,-50%) rotate(360deg);}}
 
 #orb{
-  width:76%;height:76%;border-radius:50%;
-  position:relative;z-index:2;cursor:pointer;
-  background:radial-gradient(circle at 36% 32%,rgba(255,255,255,.9) 0%,rgba(130,175,255,.82) 20%,rgba(55,95,255,.65) 50%,rgba(18,38,175,.42) 75%,transparent 100%);
-  box-shadow:0 0 clamp(18px,4vw,32px) rgba(80,130,255,.72),0 0 clamp(45px,11vw,85px) rgba(40,75,255,.42),0 0 clamp(85px,20vw,150px) rgba(18,48,200,.18),inset 0 0 18px rgba(255,255,255,.07);
+  width:76%;height:76%;
+  border-radius:50%;
+  position:relative;z-index:2;
+  cursor:pointer;
+  background:radial-gradient(circle at 36% 32%,#fff 0%,rgba(130,175,255,.84) 20%,rgba(55,95,255,.66) 50%,rgba(18,38,175,.44) 75%,transparent 100%);
+  box-shadow:0 0 30px rgba(80,130,255,.72),0 0 80px rgba(40,75,255,.42),0 0 150px rgba(18,48,200,.17),inset 0 0 18px rgba(255,255,255,.06);
   animation:oi 3s ease-in-out infinite;
-  transition:background .35s,box-shadow .35s;
+  transition:background .4s,box-shadow .4s;
 }
 @keyframes oi{0%,100%{transform:scale(1);}50%{transform:scale(1.05);filter:brightness(1.1);}}
 
-#orb.s-listen{
-  background:radial-gradient(circle at 36% 32%,rgba(255,255,255,.95) 0%,rgba(70,255,155,.87) 20%,rgba(0,195,95,.67) 50%,rgba(0,95,45,.4) 75%,transparent 100%);
-  box-shadow:0 0 clamp(22px,5vw,40px) rgba(0,255,120,.88),0 0 clamp(55px,13vw,100px) rgba(0,195,75,.52),0 0 clamp(95px,22vw,170px) rgba(0,135,55,.22);
+#orb.listen{
+  background:radial-gradient(circle at 36% 32%,#fff 0%,rgba(70,255,155,.88) 20%,rgba(0,195,95,.68) 50%,rgba(0,95,45,.4) 75%,transparent 100%);
+  box-shadow:0 0 38px rgba(0,255,120,.9),0 0 90px rgba(0,195,75,.55),0 0 160px rgba(0,135,55,.22);
   animation:ol .44s ease-in-out infinite alternate;
 }
 @keyframes ol{from{transform:scale(.93);}to{transform:scale(1.18);filter:brightness(1.35);}}
 
-#orb.s-think{
-  background:radial-gradient(circle at 36% 32%,rgba(255,255,255,.95) 0%,rgba(255,205,55,.87) 20%,rgba(255,125,0,.67) 50%,rgba(175,45,0,.4) 75%,transparent 100%);
-  box-shadow:0 0 clamp(22px,5vw,40px) rgba(255,165,0,.88),0 0 clamp(55px,13vw,100px) rgba(255,95,0,.52),0 0 clamp(95px,22vw,170px) rgba(195,55,0,.22);
+#orb.think{
+  background:radial-gradient(circle at 36% 32%,#fff 0%,rgba(255,205,55,.88) 20%,rgba(255,125,0,.68) 50%,rgba(175,45,0,.4) 75%,transparent 100%);
+  box-shadow:0 0 38px rgba(255,165,0,.9),0 0 90px rgba(255,95,0,.55),0 0 160px rgba(195,55,0,.22);
   animation:ot .85s ease-in-out infinite alternate;
 }
-@keyframes ot{from{transform:scale(.97);}to{transform:scale(1.07);filter:brightness(1.2);}}
+@keyframes ot{from{transform:scale(.97);}to{transform:scale(1.07);filter:brightness(1.22);}}
 
-#orb.s-speak{
-  background:radial-gradient(circle at 36% 32%,rgba(255,255,255,.95) 0%,rgba(255,95,255,.87) 20%,rgba(195,0,255,.67) 50%,rgba(95,0,175,.4) 75%,transparent 100%);
-  box-shadow:0 0 clamp(22px,5vw,40px) rgba(215,75,255,.92),0 0 clamp(55px,13vw,100px) rgba(155,0,255,.57),0 0 clamp(95px,22vw,170px) rgba(95,0,195,.25);
+#orb.speak{
+  background:radial-gradient(circle at 36% 32%,#fff 0%,rgba(255,95,255,.88) 20%,rgba(195,0,255,.68) 50%,rgba(95,0,175,.4) 75%,transparent 100%);
+  box-shadow:0 0 38px rgba(215,75,255,.92),0 0 90px rgba(155,0,255,.58),0 0 160px rgba(95,0,195,.24);
   animation:os .26s ease-in-out infinite alternate;
 }
 @keyframes os{from{transform:scale(.89);}to{transform:scale(1.22);filter:brightness(1.55);}}
 
-/* STATUS */
-#status{font-size:clamp(.58rem,1.8vw,.7rem);letter-spacing:.28em;color:rgba(255,255,255,.28);text-align:center;min-height:1.2em;transition:color .3s;}
+#status{
+  font-size:clamp(.54rem,1.7vw,.68rem);
+  letter-spacing:.28em;
+  color:rgba(255,255,255,.28);
+  text-align:center;
+  min-height:1em;
+  transition:color .3s;
+}
 #status.lit{color:rgba(255,255,255,.75);}
 
-/* DEBUG BOX - always on screen so user can see errors */
-#debug{
+/* Debug bar — mostra tudo na tela */
+#log{
   position:fixed;bottom:0;left:0;right:0;
-  background:rgba(0,0,0,.85);
-  border-top:1px solid rgba(255,255,255,.08);
-  padding:8px 14px;
-  font-size:clamp(.5rem,1.3vw,.6rem);
+  padding:7px 16px;
+  font-size:clamp(.46rem,1.2vw,.56rem);
   letter-spacing:.05em;
-  color:rgba(255,255,255,.35);
-  z-index:50;
-  min-height:28px;
-  text-align:center;
+  color:rgba(255,255,255,.28);
+  background:rgba(0,0,0,.75);
+  border-top:1px solid rgba(255,255,255,.06);
+  z-index:99;text-align:center;
   word-break:break-all;
+  transition:color .3s;
 }
-#debug.err{color:#ff6060;border-top-color:rgba(255,60,60,.3);}
-#debug.ok{color:rgba(0,255,120,.6);}
+#log.ok{color:rgba(0,255,130,.6);}
+#log.err{color:rgba(255,80,80,.85);}
 </style>
 </head>
 <body>
+
 <canvas id="stars"></canvas>
 
 <div id="ui">
@@ -101,115 +123,122 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
   <div id="status">TOQUE PARA FALAR</div>
 </div>
 
-<div id="debug">Inicializando...</div>
+<div id="log">Inicializando...</div>
 
 <script>
-/* ══ STARS ══════════════════════════════ */
+/* ══ STARS ══════════════════════════════════════════ */
 (function(){
   var c=document.getElementById('stars'),x=c.getContext('2d'),s=[];
-  function init(){c.width=innerWidth;c.height=innerHeight;s=[];for(var i=0;i<Math.floor(innerWidth*innerHeight/2500);i++)s.push({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*.85+.1,p:Math.random()*6.28,sp:Math.random()*.007+.002});}
-  function draw(){x.clearRect(0,0,c.width,c.height);for(var i=0;i<s.length;i++){s[i].p+=s[i].sp;x.beginPath();x.arc(s[i].x,s[i].y,s[i].r,0,6.28);x.fillStyle='rgba(255,255,255,'+(0.12+0.55*Math.abs(Math.sin(s[i].p)))+')';x.fill();}requestAnimationFrame(draw);}
+  function init(){
+    c.width=innerWidth;c.height=innerHeight;s=[];
+    for(var i=0;i<Math.floor(innerWidth*innerHeight/2500);i++)
+      s.push({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*.9+.1,p:Math.random()*6.28,sp:.002+Math.random()*.006});
+  }
+  function draw(){
+    x.clearRect(0,0,c.width,c.height);
+    for(var i=0;i<s.length;i++){
+      s[i].p+=s[i].sp;
+      x.beginPath();x.arc(s[i].x,s[i].y,s[i].r,0,6.28);
+      x.fillStyle='rgba(255,255,255,'+(0.1+0.6*Math.abs(Math.sin(s[i].p)))+')';
+      x.fill();
+    }
+    requestAnimationFrame(draw);
+  }
   init();window.addEventListener('resize',init);draw();
 })();
 
-/* ══ ELEMENTS ═══════════════════════════ */
-var orb      = document.getElementById('orb');
-var statusEl = document.getElementById('status');
-var dbg      = document.getElementById('debug');
+/* ══ REFS ══════════════════════════════════════════ */
+var orb   = document.getElementById('orb');
+var stEl  = document.getElementById('status');
+var logEl = document.getElementById('log');
 
-/* ══ DEBUG LOG ══════════════════════════ */
-function log(msg, type) {
+/* ══ LOG ════════════════════════════════════════════ */
+function log(msg, cls) {
   console.log('[JARVIS]', msg);
-  dbg.className = type || '';
-  dbg.textContent = msg;
+  logEl.textContent = msg;
+  logEl.className = cls || '';
 }
 
-/* ══ STATE ══════════════════════════════ */
-var state = 'idle';
+/* ══ STATE ══════════════════════════════════════════ */
+var state   = 'idle';
 var history = [];
-var ttsReady = false;
+var ttsOk   = false;
 
 function setState(s) {
   state = s;
   orb.className = '';
-  statusEl.className = '';
-  if (s==='listen') { orb.classList.add('s-listen'); statusEl.classList.add('lit'); statusEl.textContent='OUVINDO...'; }
-  else if (s==='think') { orb.classList.add('s-think'); statusEl.classList.add('lit'); statusEl.textContent='PROCESSANDO...'; }
-  else if (s==='speak') { orb.classList.add('s-speak'); statusEl.classList.add('lit'); statusEl.textContent='J.A.R.V.I.S'; }
-  else { statusEl.textContent='TOQUE PARA FALAR'; }
+  stEl.className = '';
+  if (s === 'listen') { orb.classList.add('listen'); stEl.classList.add('lit'); stEl.textContent = 'OUVINDO...'; }
+  else if (s === 'think') { orb.classList.add('think'); stEl.classList.add('lit'); stEl.textContent = 'PROCESSANDO...'; }
+  else if (s === 'speak') { orb.classList.add('speak'); stEl.classList.add('lit'); stEl.textContent = 'J.A.R.V.I.S'; }
+  else { stEl.textContent = 'TOQUE PARA FALAR'; }
 }
 
-/* ══ UNLOCK TTS (call on user gesture) ══ */
+/* ══ UNLOCK TTS — deve ser chamado dentro de gesto do usuário ══ */
 function unlockTTS() {
-  if (ttsReady) return;
-  if (!window.speechSynthesis) return;
+  if (ttsOk || !window.speechSynthesis) return;
   var u = new SpeechSynthesisUtterance('');
   u.volume = 0; u.rate = 10;
   window.speechSynthesis.speak(u);
-  ttsReady = true;
+  ttsOk = true;
   log('TTS desbloqueado', 'ok');
 }
 
-/* ══ SPEAK ══════════════════════════════ */
+/* ══ SPEAK ══════════════════════════════════════════ */
 function speak(text) {
   if (!window.speechSynthesis) {
-    log('ERRO: speechSynthesis não existe neste browser', 'err');
+    log('Erro: browser não tem TTS. Use Chrome ou Safari.', 'err');
     setState('idle'); return;
   }
 
   window.speechSynthesis.cancel();
+  var clean = text.replace(/<[^>]*>/g, '').replace(/[*_`#◈▸⚠]/g, '').replace(/\s+/g, ' ').trim();
+  log('Falando: "' + clean.slice(0, 55) + (clean.length > 55 ? '…' : '') + '"', 'ok');
 
-  var clean = text.replace(/<[^>]*>/g,'').replace(/[*_`#◈▸⚠]/g,'').replace(/\s+/g,' ').trim();
-  log('Falando: "' + clean.slice(0,50) + (clean.length>50?'..':'') + '"', 'ok');
-
-  function doSpeak() {
+  function go() {
     var voices = window.speechSynthesis.getVoices();
-    log('Vozes disponíveis: ' + voices.length + ' | pt-BR: ' + voices.filter(function(v){return v.lang.startsWith('pt');}).length);
-
     var u = new SpeechSynthesisUtterance(clean);
     u.lang = 'pt-BR'; u.rate = 0.88; u.pitch = 0.6; u.volume = 1;
 
-    var ptv = voices.find(function(v){return v.lang==='pt-BR'&&v.localService;})
-           || voices.find(function(v){return v.lang==='pt-BR';})
-           || voices.find(function(v){return v.lang.startsWith('pt');});
-    if (ptv) { u.voice = ptv; log('Voz: ' + ptv.name); }
-    else log('AVISO: sem voz pt-BR, usando padrão');
+    var best =
+      voices.find(function(v) { return v.lang === 'pt-BR' && v.localService; }) ||
+      voices.find(function(v) { return v.lang === 'pt-BR'; }) ||
+      voices.find(function(v) { return v.lang.startsWith('pt'); });
+    if (best) { u.voice = best; log('Voz: ' + best.name, 'ok'); }
+    else { log('Aviso: sem voz pt-BR instalada, usando padrão do sistema'); }
 
-    u.onstart = function() { setState('speak'); log('TTS started'); };
-    u.onend   = function() { setState('idle'); log('TTS ended — pronto'); };
+    u.onstart = function() { setState('speak'); };
+    u.onend   = function() { setState('idle'); log('Pronto — toque para falar', 'ok'); };
     u.onerror = function(e) {
-      log('ERRO TTS: ' + e.error, 'err');
-      if (e.error !== 'interrupted') setState('idle');
+      if (e.error === 'interrupted') return;
+      log('Erro TTS: ' + e.error, 'err');
+      setState('idle');
     };
 
-    window.speechSynthesis.speak(u);
     setState('speak');
+    window.speechSynthesis.speak(u);
   }
 
-  var vv = window.speechSynthesis.getVoices();
-  if (vv.length > 0) { doSpeak(); return; }
-  log('Aguardando vozes...');
-  var t = setTimeout(doSpeak, 600);
+  var v = window.speechSynthesis.getVoices();
+  if (v.length) { go(); return; }
+  var t = setTimeout(go, 600);
   window.speechSynthesis.onvoiceschanged = function() {
     clearTimeout(t);
     window.speechSynthesis.onvoiceschanged = null;
-    doSpeak();
+    go();
   };
 }
 
-/* ══ API CALL ═══════════════════════════ */
-function askJarvis(text) {
-  text = (text || '').trim();
-  if (!text) { setState('idle'); return; }
-  if (state === 'think') return;
+/* ══ API ════════════════════════════════════════════ */
+function ask(heard) {
+  heard = (heard || '').trim();
+  if (!heard || state === 'think') return;
 
   window.speechSynthesis && window.speechSynthesis.cancel();
-
-  history.push({ role: 'user', content: text });
+  history.push({ role: 'user', content: heard });
   if (history.length > 20) history = history.slice(-20);
-
   setState('think');
-  log('Chamando API com: "' + text.slice(0,40) + '"');
+  log('Enviando: "' + heard.slice(0, 45) + '"…');
 
   fetch('/api/chat', {
     method: 'POST',
@@ -217,28 +246,26 @@ function askJarvis(text) {
     body: JSON.stringify({ messages: history.slice(-8) })
   })
   .then(function(r) {
-    log('HTTP status: ' + r.status);
-    return r.text().then(function(t) {
-      return { status: r.status, text: t };
-    });
+    log('HTTP ' + r.status);
+    return r.text().then(function(t) { return { s: r.status, t: t }; });
   })
   .then(function(r) {
-    log('Raw response: ' + r.text.slice(0, 80));
+    log('Raw: ' + r.t.slice(0, 70));
     var d;
-    try { d = JSON.parse(r.text); } catch(e) { throw new Error('JSON parse error: ' + r.text.slice(0,80)); }
-    if (r.status !== 200) throw new Error('API error ' + r.status + ': ' + (d.error || r.text.slice(0,80)));
+    try { d = JSON.parse(r.t); } catch(e) { throw new Error('JSON inválido: ' + r.t.slice(0, 60)); }
+    if (r.s !== 200) throw new Error(d.error || ('HTTP ' + r.s));
     var reply = (d.reply || '').trim();
-    if (!reply) throw new Error('Reply vazio. Raw: ' + r.text.slice(0,100));
+    if (!reply) throw new Error('reply vazio. raw: ' + r.t.slice(0, 80));
     history.push({ role: 'assistant', content: reply });
     speak(reply);
   })
-  .catch(function(err) {
-    log('ERRO: ' + err.message, 'err');
+  .catch(function(e) {
+    log('ERRO: ' + e.message, 'err');
     setState('idle');
   });
 }
 
-/* ══ SPEECH RECOGNITION ═════════════════ */
+/* ══ RECONHECIMENTO DE VOZ ══════════════════════════ */
 var recog = null;
 var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
 
@@ -252,47 +279,49 @@ if (SR) {
   recog.onresult = function(e) {
     var heard = (e.results[0][0].transcript || '').trim();
     log('Ouvi: "' + heard + '"', 'ok');
-    if (heard) askJarvis(heard);
-    else { log('Nada ouvido', 'err'); setState('idle'); }
+    if (heard) ask(heard);
+    else { log('Nenhuma voz detectada', 'err'); setState('idle'); }
   };
 
   recog.onerror = function(e) {
-    log('Erro microfone: ' + e.error, 'err');
-    if (e.error === 'not-allowed') log('MICROFONE BLOQUEADO — permita nas config do browser', 'err');
-    if (e.error !== 'aborted') setState('idle');
+    if (e.error === 'aborted') return;
+    if (e.error === 'not-allowed') log('MICROFONE BLOQUEADO — permita acesso ao mic nas configurações', 'err');
+    else log('Erro microfone: ' + e.error, 'err');
+    setState('idle');
   };
 
   recog.onend = function() {
-    if (state === 'listen') { setState('think'); }
+    if (state === 'listen') setState('idle');
   };
 
-  log('Microfone disponível (Chrome/Safari)', 'ok');
+  log('Pronto. Toque no orb para falar.', 'ok');
 } else {
-  log('ERRO: Reconhecimento de voz não suportado. Use Chrome ou Safari.', 'err');
+  log('Use Google Chrome — reconhecimento de voz não suportado neste browser', 'err');
 }
 
-/* ══ ORB TAP ════════════════════════════ */
-var tapping = false;
+/* ══ TOQUE NO ORB ══════════════════════════════════ */
+var busy = false;
 function onTap(e) {
-  e && e.preventDefault();
-  if (tapping) return;
-  tapping = true; setTimeout(function(){ tapping=false; }, 400);
+  if (e) e.preventDefault();
+  if (busy) return;
+  busy = true; setTimeout(function() { busy = false; }, 400);
 
-  unlockTTS(); // Must happen in user gesture
+  unlockTTS(); // DEVE estar dentro do gesto do usuário
 
   if (state === 'speak') {
     window.speechSynthesis && window.speechSynthesis.cancel();
-    setState('idle'); log('TTS cancelado'); return;
+    setState('idle'); log('Cancelado');
+    return;
   }
-  if (state === 'think') { log('Aguarde...'); return; }
+  if (state === 'think') { log('Aguarde, processando...'); return; }
   if (state === 'listen') {
-    try { recog && recog.stop(); } catch(e){}
-    setState('idle'); return;
+    try { recog && recog.stop(); } catch(e) {}
+    setState('idle'); log('Cancelado');
+    return;
   }
 
-  // idle → listen
-  if (!recog) { log('Sem suporte a voz. Use Chrome.', 'err'); return; }
-
+  // idle → começar a ouvir
+  if (!recog) { log('Use Google Chrome para reconhecimento de voz', 'err'); return; }
   window.speechSynthesis && window.speechSynthesis.cancel();
 
   try { recog.abort(); } catch(e) {}
@@ -300,38 +329,40 @@ function onTap(e) {
     try {
       recog.start();
       setState('listen');
-      log('Microfone iniciado — fale agora');
+      log('Fale agora...');
     } catch(err) {
-      log('Erro ao iniciar mic: ' + err.message, 'err');
+      log('Erro ao iniciar microfone: ' + err.message, 'err');
       setState('idle');
     }
-  }, 200);
+  }, 150);
 }
 
 orb.addEventListener('click', onTap);
 orb.addEventListener('touchend', onTap, { passive: false });
 
-/* ══ INIT ═══════════════════════════════ */
+/* ══ INIT VOICES ════════════════════════════════════ */
 if (window.speechSynthesis) {
   window.speechSynthesis.getVoices();
   window.speechSynthesis.onvoiceschanged = function() { window.speechSynthesis.getVoices(); };
 }
 
-// Warm up API and show result
-setTimeout(function() {
-  log('Testando API...');
-  fetch('/api/chat', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ messages: [{ role: 'user', content: 'diga apenas: online' }] })
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(d) {
-    if (d.reply) log('API OK ✓ — ' + d.reply.slice(0,40), 'ok');
-    else log('API retornou sem reply: ' + JSON.stringify(d).slice(0,80), 'err');
-  })
-  .catch(function(e) { log('API FALHOU: ' + e.message, 'err'); });
-}, 800);
+/* ══ TESTE API AO CARREGAR ══════════════════════════ */
+window.addEventListener('load', function() {
+  setTimeout(function() {
+    log('Testando API...');
+    fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: [{ role: 'user', content: 'responda só: online' }] })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (d.reply) log('API OK ✓  — ' + d.reply.slice(0, 50), 'ok');
+      else log('API respondeu sem reply: ' + JSON.stringify(d).slice(0, 80), 'err');
+    })
+    .catch(function(e) { log('API falhou: ' + e.message, 'err'); });
+  }, 1500);
+});
 </script>
 </body>
 </html>
