@@ -1,8 +1,5 @@
 {
-  "name": "jarvis-assistant",
+  "name": "jarvis",
   "version": "1.0.0",
-  "description": "J.A.R.V.I.S AI Voice Assistant powered by SambaNova",
-  "engines": {
-    "node": ">=18"
-  }
+  "engines": { "node": ">=18" }
 }
