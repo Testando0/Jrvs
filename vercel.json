@@ -1,8 +1,10 @@
 {
   "version": 2,
   "functions": {
-    "api/chat.js": {
-      "maxDuration": 30
-    }
-  }
+    "api/chat.js": { "maxDuration": 30 }
+  },
+  "routes": [
+    { "src": "/api/chat", "dest": "/api/chat.js" },
+    { "src": "/(.*)", "dest": "/$1" }
+  ]
 }
