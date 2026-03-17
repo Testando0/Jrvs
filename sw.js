@@ -1,7 +1,6 @@
-const CACHE = 'jarvis-v1';
-const STATIC = ['/', '/index.html', '/manifest.json', '/icon-192.png', '/icon-512.png'];
+const CACHE = 'jarvis-v2';
+const STATIC = ['/index.html', '/manifest.json', '/icon-192.png', '/icon-512.png'];
 
-// Install — cacheia os arquivos estáticos
 self.addEventListener('install', function(e) {
   e.waitUntil(
     caches.open(CACHE).then(function(c) {
@@ -12,7 +11,6 @@ self.addEventListener('install', function(e) {
   );
 });
 
-// Activate — limpa caches antigos
 self.addEventListener('activate', function(e) {
   e.waitUntil(
     caches.keys().then(function(keys) {
@@ -26,31 +24,26 @@ self.addEventListener('activate', function(e) {
   );
 });
 
-// Fetch — cache first para estáticos, network only para /api/
 self.addEventListener('fetch', function(e) {
-  var url = new URL(e.request.url);
+  // NUNCA interceptar POST - deixa passar direto para o servidor
+  if (e.request.method !== 'GET') return;
 
-  // API calls: sempre vai para a rede, nunca cacheia
-  if (url.pathname.startsWith('/api/')) {
-    e.respondWith(fetch(e.request));
-    return;
-  }
+  // NUNCA interceptar chamadas de API
+  if (e.request.url.includes('/api/')) return;
 
-  // Estáticos: cache first, fallback para rede
+  // Só cacheia GETs de arquivos estáticos
   e.respondWith(
     caches.match(e.request).then(function(cached) {
       if (cached) return cached;
       return fetch(e.request).then(function(res) {
-        // Cacheia novas respostas bem-sucedidas
-        if (res && res.status === 200 && res.type === 'basic') {
+        if (res && res.status === 200) {
           var clone = res.clone();
           caches.open(CACHE).then(function(c) { c.put(e.request, clone); });
         }
         return res;
+      }).catch(function() {
+        return caches.match('/index.html');
       });
-    }).catch(function() {
-      // Offline fallback: retorna index.html cacheado
-      return caches.match('/index.html');
     })
   );
 });
